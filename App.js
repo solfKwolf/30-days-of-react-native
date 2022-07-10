@@ -22,6 +22,8 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import Day1 from './src/views/day1';
+import Day2 from './src/views/day2';
+import Day3 from './src/views/day3';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -29,6 +31,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
+// import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,11 +74,34 @@ function HomeScreen({navigation}) {
       key: 0,
       title: 'A stopwatch',
       component: Day1,
+      name: 'Day1',
       isFA: false,
       icon: 'ios-stopwatch',
       size: 48,
       color: '#ff856c',
       hideNav: false,
+    },
+    {
+      key: 1,
+      title: 'A weather app',
+      component: Day2,
+      name: 'Day2',
+      isFA: false,
+      icon: 'ios-partly-sunny',
+      size: 60,
+      color: '#90bdc1',
+      hideNav: true,
+    },
+    {
+      key: 2,
+      title: 'twitter',
+      component: Day3,
+      name: 'Day3',
+      isFA: false,
+      icon: 'logo-twitter',
+      size: 50,
+      color: '#2aa2ef',
+      hideNav: true,
     },
   ]);
 
@@ -87,7 +114,7 @@ function HomeScreen({navigation}) {
           index % 3 === 0 && index > 0 ? styles.touchBox2 : styles.touchBox1,
         ]}
         underlayColor="#eee"
-        onPress={() => _jumpToDay()}>
+        onPress={() => _jumpToDay(elem)}>
         <View style={styles.boxContainer}>
           <Text style={styles.boxText}>Day{index + 1}</Text>
           <Icon
@@ -100,8 +127,8 @@ function HomeScreen({navigation}) {
     );
   });
 
-  function _jumpToDay() {
-    navigation.push('Day1');
+  function _jumpToDay({name}) {
+    navigation.push(name);
   }
 
   return (
@@ -147,13 +174,36 @@ const App: () => Node = () => {
       color: '#ff856c',
       hideNav: false,
     },
+    {
+      key: 1,
+      title: 'A weather app',
+      component: Day2,
+      isFA: false,
+      icon: 'ios-partly-sunny',
+      size: 60,
+      color: '#90bdc1',
+      name: 'Day2',
+      hideNav: true,
+    },
+    {
+      key: 2,
+      title: 'twitter',
+      component: Day3,
+      name: 'Day3',
+      isFA: false,
+      icon: 'logo-twitter',
+      size: 50,
+      color: '#2aa2ef',
+      hideNav: true,
+    },
   ]);
   const dyaGrids = days.map(function (elem, index) {
     return (
       <Stack.Screen
         key={index}
         name={elem.name}
-        component={elem.component}
+        component={gestureHandlerRootHOC(elem.component)}
+        options={{headerShown: false}}
         headerTitleAlign="center"
       />
     );
@@ -173,6 +223,8 @@ const App: () => Node = () => {
         {dyaGrids}
       </Stack.Navigator>
     </NavigationContainer>
+    // <GestureHandlerRootView>
+    // </GestureHandlerRootView>
   );
 };
 
